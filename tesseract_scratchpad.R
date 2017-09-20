@@ -74,3 +74,41 @@ handwritten_hq2 <- image_read("C:/Users/Stephen/Desktop/R/tesseract/test_docs/ha
 print(handwritten_hq2)
 handwritten_hq2 <- image_ocr(handwritten_hq2)
 cat(handwritten_hq2)
+
+
+########################################
+
+
+# convert pdf to png
+list.files("C:/Users/Stephen/Desktop/R/tesseract/test_docs/")
+
+# does not work using magick
+# receipt_pdf <- image_read("C:/Users/Stephen/Desktop/R/tesseract/test_docs/receipt.pdf")
+
+# install.packages("animation")
+# https://stackoverflow.com/questions/18617270/convert-pdf-to-png-in-r
+# doesn't work, you need to manually download imageMagick software - animation is just a wrapper
+ibrary(animation)
+im.convert("C:/Users/Stephen/Desktop/R/tesseract/test_docs/receipt.pdf", output = "receipt.png", 
+           extra.opts = "-density 150")
+
+# using pdftools
+# https://ropensci.org/blog/2016/03/01/pdftools-and-jeroen
+# install.packages("pdftools")
+# this works
+library(pdftools)
+bitmap <- pdf_render_page("C:/Users/Stephen/Desktop/R/tesseract/test_docs/receipt.pdf", page = 1)
+bitmap
+png::writePNG(bitmap, "C:/Users/Stephen/Desktop/R/tesseract/test_docs/receipt.png", dpi = 999)
+
+# then read png using magick
+# but the png output has too low resolution/dpi so it can't run ocr on it
+receipt2 <- image_read("C:/Users/Stephen/Desktop/R/tesseract/test_docs/receipt.png")
+print(receipt2)
+receipt2 <- image_ocr(receipt2)
+cat(receipt2)
+
+
+
+
+
